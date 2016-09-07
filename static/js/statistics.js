@@ -407,7 +407,7 @@ function processAppearance (i, item) {
     item['marker'].spawnpointId = spawnpointId
     mapData.appearances[spawnpointId] = item
   }
-  heatmapPoints.push({location: new google.maps.LatLng(item['latitude'], item['longitude']), weight: item['count']})
+  heatmapPoints.push({location: new google.maps.LatLng(item['latitude'], item['longitude']), weight: parseFloat(item['count'])})
 }
 
 function redrawAppearances (appearances) {
