@@ -163,9 +163,11 @@ function processSeen (seen) {
 
   document.getElementById('seen_total').innerHTML = 'Total: ' + total.toLocaleString()
 }
+// Override UpdateMap in map.js to stop auto updating
+function updateMap() {
+}
 
-// Override UpdateMap in map.js to take advantage of a pre-existing interval.
-function updateMap (firstRun) {
+function updateStatMap (firstRun) {
   var duration = document.getElementById('duration')
   var header = 'Pokemon Seen in ' + duration.options[duration.selectedIndex].text
   if ($('#seen_header').html() !== header) {
@@ -184,7 +186,7 @@ function updateMap (firstRun) {
   })
 }
 
-updateMap()
+updateStatMap()
 
 /* Overlay */
 var detailsLoading = false
@@ -194,7 +196,6 @@ var mapLoaded = false
 var detailsPersist = false
 var map = null
 var heatmap = null
-var heatmapNumPoints = -1
 var heatmapPoints = []
 mapData.appearances = {}
 
@@ -356,7 +357,7 @@ function initMap () {
   })
 
   map.setMapTypeId(Store.get('map_style'))
-  google.maps.event.addListener(map, 'idle', updateMap)
+  google.maps.event.addListener(map, 'idle', updateStatMap)
 
   mapLoaded = true
 
@@ -372,7 +373,6 @@ function resetMap () {
   })
 
   heatmapPoints = []
-  heatmapNumPoints = 0
   if (heatmap) {
     heatmap.setMap(null)
   }
@@ -460,19 +460,14 @@ function appearanceTab (item) {
 function updateDetails () {
   loadDetails().done(function (result) {
     $.each(result.appearances, processAppearance)
-
-    // Redraw the heatmap with all the new appearances
-    if (heatmapNumPoints !== heatmapPoints.length) {
-      if (heatmap) {
-        heatmap.setMap(null)
-      }
-      heatmap = new google.maps.visualization.HeatmapLayer({
-        data: heatmapPoints,
-        map: map,
-        radius: 50
-      })
-      heatmapNumPoints = heatmapPoints.length
+    if (heatmap) {
+      heatmap.setMap(null)
     }
+    heatmap = new google.maps.visualization.HeatmapLayer({
+      data: heatmapPoints,
+      map: map,
+      radius: 50
+    })
   })
 }
 
@@ -484,4 +479,4 @@ $('#nav select')
   .select2({
     minimumResultsForSearch: Infinity
   })
-  .on('change', updateMap)
+  .on('change', updateStatMap)
