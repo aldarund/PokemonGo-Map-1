@@ -28,7 +28,7 @@ log = logging.getLogger(__name__)
 
 args = get_args()
 flaskDb = FlaskDB()
-cache = TTLCache(maxsize=100, ttl=60*5)
+cache = TTLCache(maxsize=100, ttl=60 * 5)
 
 db_schema_version = 7
 
@@ -201,7 +201,7 @@ class Pokemon(BaseModel):
         return {'pokemon': pokemons, 'total': total}
 
     @classmethod
-    def get_appearances(cls, pokemon_id,  timediff):
+    def get_appearances(cls, pokemon_id, timediff):
         '''
         :param pokemon_id: id of pokemon that we need appearances for
         :param timediff: limiting period of the selection
