@@ -163,9 +163,6 @@ function processSeen (seen) {
 
   document.getElementById('seen_total').innerHTML = 'Total: ' + total.toLocaleString()
 }
-// Override UpdateMap in map.js to stop auto updating
-function updateMap() {
-}
 
 function updateStatMap (firstRun) {
   var duration = document.getElementById('duration')
