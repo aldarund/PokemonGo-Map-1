@@ -373,7 +373,6 @@ function resetMap () {
   if (heatmap) {
     heatmap.setMap(null)
   }
-
 }
 
 function showOverlay (id) {
@@ -403,7 +402,7 @@ function processAppearance (i, item) {
     if (item['marker']) {
       item['marker'].setMap(null)
     }
-    item['marker'] = setupPokemonMarker(item, true)
+    item['marker'] = setupPokemonMarker(item, map, true)
     item['marker'].spawnpointId = spawnpointId
     mapData.appearances[spawnpointId] = item
   }
@@ -414,7 +413,7 @@ function redrawAppearances (appearances) {
   $.each(appearances, function (key, value) {
     var item = appearances[key]
     if (!item['hidden']) {
-      var newMarker = setupPokemonMarker(item, true)
+      var newMarker = setupPokemonMarker(item, map, true)
       item['marker'].setMap(null)
       newMarker.spawnpointId = item['spawnpoint_id']
       appearances[key].marker = newMarker
