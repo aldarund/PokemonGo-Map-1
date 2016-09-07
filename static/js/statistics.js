@@ -49,9 +49,8 @@ function addElement (pokemonId, name) {
     class: 'image'
   }).appendTo('#seen_' + pokemonId + '_base')
 
-  jQuery('<img/>', {
-    src: 'static/icons/' + pokemonId + '.png',
-    alt: 'Image for Pokemon #' + pokemonId
+  jQuery('<i/>', {
+    class: 'pokemon-sprite n' + pokemonId
   }).appendTo(imageContainer)
 
   var baseDetailContainer = jQuery('<div/>', {
@@ -190,8 +189,6 @@ updateMap()
 /* Overlay */
 var detailsLoading = false
 var appearancesTimesLoading = false
-var detailInterval = null
-var lastappearance = 1
 var pokemonid = 0
 var mapLoaded = false
 var detailsPersist = false
@@ -212,7 +209,6 @@ function loadDetails () {
       'scanned': false,
       'appearances': true,
       'pokemonid': pokemonid,
-      'last': lastappearance,
       'duration': $('#duration').val()
     },
     dataType: 'json',
@@ -381,7 +377,6 @@ function resetMap () {
     heatmap.setMap(null)
   }
 
-  lastappearance = 0
 }
 
 function showOverlay (id) {
@@ -394,14 +389,12 @@ function showOverlay (id) {
   $('#location_details').show()
   location.hash = 'overlay_' + pokemonid
   updateDetails()
-  detailInterval = window.setInterval(updateDetails, 5000)
 
   return false
 }
 
 function closeOverlay () { // eslint-disable-line no-unused-vars
   $('#location_details').hide()
-  window.clearInterval(detailInterval)
   closeTimes()
   location.hash = ''
   return false
@@ -416,12 +409,8 @@ function processAppearance (i, item) {
     item['marker'] = setupPokemonMarker(item, true)
     item['marker'].spawnpointId = spawnpointId
     mapData.appearances[spawnpointId] = item
-  } else {
-    mapData.appearances[spawnpointId].count += item['count']
   }
-
-  heatmapPoints.push(new google.maps.LatLng(item['latitude'], item['longitude']))
-  lastappearance = Math.max(lastappearance, item['disappear_time'])
+  heatmapPoints.push({location: new google.maps.LatLng(item['latitude'], item['longitude']), weight: item['count']})
 }
 
 function redrawAppearances (appearances) {
