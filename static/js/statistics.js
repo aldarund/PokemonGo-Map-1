@@ -264,7 +264,6 @@ function closeTimes () {
   detailsPersist = false
 }
 
-// Overrides addListeners in map.js
 function addListeners (marker) { // eslint-disable-line no-unused-vars
   marker.addListener('click', function () {
     showTimes(marker)
@@ -403,6 +402,7 @@ function processAppearance (i, item) {
       item['marker'].setMap(null)
     }
     item['marker'] = setupPokemonMarker(item, map, true)
+    addListeners(item['marker'])
     item['marker'].spawnpointId = spawnpointId
     mapData.appearances[spawnpointId] = item
   }
@@ -415,6 +415,7 @@ function redrawAppearances (appearances) {
     if (!item['hidden']) {
       var newMarker = setupPokemonMarker(item, map, true)
       item['marker'].setMap(null)
+      addListeners(newMarker)
       newMarker.spawnpointId = item['spawnpoint_id']
       appearances[key].marker = newMarker
     }
